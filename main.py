@@ -64,8 +64,10 @@ def view_pending_tasks(show_menu=True):
             column_widths = []
 
             for col in range(num_columns):
+                # Look at every cell in this column
+                # and find the one with the longest value
                 max_length = max(len(row[col]) for row in rows)
-                column_widths.append(max_length + 2)
+                column_widths.append(max_length + 2)  # added 2 for spacing
 
             formatted_header = ""
             for index, cell in enumerate(header_row):
