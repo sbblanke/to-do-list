@@ -3,3 +3,6 @@
 
 # Developer files to sub in/out for testing
 temp/
+
+# Virtual environment settings
+venv/
