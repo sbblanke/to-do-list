@@ -1,1 +1,5 @@
+# Do not commit tasks to git
 *.csv
+
+# Developer files to sub in/out for testing
+temp/
