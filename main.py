@@ -26,14 +26,14 @@ def menu():
 
 def view_pending_tasks(show_menu=True):
     if not p.exists():
-        print("No tasks have been created yet!")
+        print("No tasks have been created yet.")
     else:
         with open("tasks.csv", newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=",")
             rows = list(reader)
 
             if not rows:
-                print("No tasks have been created yet!")
+                print("No tasks have been created yet.")
                 return
 
             header_row = rows[0]
@@ -63,7 +63,7 @@ def view_pending_tasks(show_menu=True):
                     row_counter += 1
 
             if row_counter == 0:
-                print("All tasks have already been completed!")
+                print("No tasks are currently pending.")
 
     if show_menu:
         print(next_selection)
@@ -71,15 +71,14 @@ def view_pending_tasks(show_menu=True):
 
 def view_completed_tasks(show_menu=True):
     if not p.exists():
-        print("No tasks have been created yet!")
+        print("No tasks have been created yet.")
     else:
         with open("tasks.csv", newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=",")
             rows = list(reader)
 
             if not rows:
-                print("No tasks have been created yet!")
-                print(next_selection)
+                print("No tasks have been created yet.")
                 return
 
             header_row = rows[0]
@@ -108,7 +107,6 @@ def view_completed_tasks(show_menu=True):
 
             if row_counter == 0:
                 print("No tasks have been completed yet.")
-                print(next_selection)
 
     if show_menu:
         print(next_selection)
@@ -160,24 +158,45 @@ def add_task():
 
 
 def complete_task():
-    view_pending_tasks(show_menu=False)
-    selection = input("Which task did you complete?\n")
+    if p.exists():
+        view_pending_tasks(show_menu=False)
+        with open("tasks.csv", "r", newline="") as csvfile:
+            reader = csv.DictReader(csvfile)
+            rows = list(reader)
+            pending_task_exists = False
+            selected_task_found = False
 
-    with open("tasks.csv", "r", newline="") as csvfile:
-        reader = csv.DictReader(csvfile)
-        rows = list(reader)
+            for row in rows:
+                if row["Completed"] == "False":
+                    pending_task_exists = True
 
-        for row in rows:
-            if row["Task Number"] == selection:
-                row["Completed"] = "True"
+            if pending_task_exists:
+                selection = input("Which task did you complete?\n")
+                for row in rows:
+                    if row["Task Number"] == selection:
+                        if row["Completed"] == "False":
+                            row["Completed"] = "True"
+                            selected_task_found = True
 
-    with open("tasks.csv", "w", newline="") as csvfile:
-        fieldnames = ["Task Number", "Task Name", "Description", "Completed"]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
+                if selected_task_found:
+                    with open("tasks.csv", "w", newline="") as csvfile:
+                        fieldnames = [
+                            "Task Number",
+                            "Task Name",
+                            "Description",
+                            "Completed",
+                        ]
+                        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                        writer.writeheader()
+                        writer.writerows(rows)
 
-    print("Task completed! Nice job!")
+                        print("Task completed. Nice job!")
+
+                else:
+                    print("Selected task not pending. Task not adjusted.")
+    else:
+        print("Add a task first!")
+
     print(next_selection)
 
 
