@@ -4,6 +4,8 @@ from pathlib import Path
 
 p = Path("tasks.csv")
 
+next_selection = "What would you like to do next?"
+
 
 def menu():
     selection = input(
@@ -14,35 +16,12 @@ def menu():
         "4. Complete a task\n"
         "0. Exit program\n"
         "\n"
-        "User Selection: "
+        "Enter your desired number: "
     )
     if not selection:
-        raise ValueError("\nMust select an option\n")
+        return None
 
-    selection = selection.lower()
-    selection = selection.lstrip()
-    selection = selection.rstrip()
-
-    if selection == "view all pending tasks" or selection == "1":
-        view_pending_tasks()
-    elif selection == "view all completed tasks" or selection == "2":
-        view_completed_tasks()
-    elif selection == "add a task" or selection == "3":
-        add_task()
-    elif selection == "complete a task" or selection == "4":
-        complete_task()
-    elif selection == "exit program" or selection == "0":
-        return "Session Ended by User."
-    else:
-        print("Invalid selection. Please try again.")
-        print()
-        menu()
-        print()
-
-
-def secondary_menu():
-    print("What would you like to do next?")
-    menu()
+    return selection
 
 
 def view_pending_tasks(show_menu=True):
@@ -55,7 +34,6 @@ def view_pending_tasks(show_menu=True):
 
             if not rows:
                 print("No tasks have been created yet!")
-                secondary_menu()
                 return
 
             header_row = rows[0]
@@ -88,7 +66,7 @@ def view_pending_tasks(show_menu=True):
                 print("All tasks have already been completed!")
 
     if show_menu:
-        secondary_menu()
+        print(next_selection)
 
 
 def view_completed_tasks(show_menu=True):
@@ -101,7 +79,7 @@ def view_completed_tasks(show_menu=True):
 
             if not rows:
                 print("No tasks have been created yet!")
-                secondary_menu()
+                print(next_selection)
                 return
 
             header_row = rows[0]
@@ -130,9 +108,10 @@ def view_completed_tasks(show_menu=True):
 
             if row_counter == 0:
                 print("No tasks have been completed yet.")
+                print(next_selection)
 
     if show_menu:
-        secondary_menu()
+        print(next_selection)
 
 
 def add_task():
@@ -142,8 +121,9 @@ def add_task():
 
     # Optional - null input should be accepted
     add_description = input("Add any relevant details about this task. ")
+    print("Task Added!")
 
-    if p.exists() is True:
+    if p.exists():
         with open("tasks.csv", "r", newline="") as csvfile:
             reader = csv.DictReader(csvfile)
             counter = 1
@@ -162,7 +142,7 @@ def add_task():
                 }
             )
 
-    if p.exists() is False:
+    else:
         with open("tasks.csv", "w", newline="") as tasks:
             fieldnames = ["Task Number", "Task Name", "Description", "Completed"]
             writer = csv.DictWriter(tasks, fieldnames=fieldnames)
@@ -176,7 +156,7 @@ def add_task():
                 }
             )
 
-    secondary_menu()
+    print(next_selection)
 
 
 def complete_task():
@@ -197,16 +177,29 @@ def complete_task():
         writer.writeheader()
         writer.writerows(rows)
 
-    secondary_menu()
+    print("Task completed! Nice job!")
+    print(next_selection)
 
 
 def main():
     print("Welcome to your to-do list!\n")
     print("What would you like to do first?")
+    while True:
+        selection = menu()
+        if selection == "0":
+            break
+        elif selection == "1":
+            view_pending_tasks()
+        elif selection == "2":
+            view_completed_tasks()
+        elif selection == "3":
+            add_task()
+        elif selection == "4":
+            complete_task()
+        else:
+            print("Please select a valid number.")
 
-    menu()
-
-    print("Come back when you complete something!")
+    print("Be productive and come back soon!")
 
 
 if __name__ == "__main__":
