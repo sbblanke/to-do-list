@@ -2,7 +2,8 @@
 import csv
 from pathlib import Path
 
-p = Path("tasks.csv")
+SCRIPT_DIR = Path(__file__).parent
+p = SCRIPT_DIR / "tasks.csv"
 
 next_selection = "What would you like to do next?"
 
