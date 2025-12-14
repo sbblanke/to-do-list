@@ -29,7 +29,7 @@ def view_pending_tasks(show_menu=True):
     if not p.exists():
         print("No tasks have been created yet.")
     else:
-        with open("tasks.csv", newline="") as csvfile:
+        with open(p, newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=",")
             rows = list(reader)
 
@@ -74,7 +74,7 @@ def view_completed_tasks(show_menu=True):
     if not p.exists():
         print("No tasks have been created yet.")
     else:
-        with open("tasks.csv", newline="") as csvfile:
+        with open(p, newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=",")
             rows = list(reader)
 
@@ -123,13 +123,13 @@ def add_task():
     print("Task Added!")
 
     if p.exists():
-        with open("tasks.csv", "r", newline="") as csvfile:
+        with open(p, "r", newline="") as csvfile:
             reader = csv.DictReader(csvfile)
             counter = 1
             for row in reader:
                 counter += 1
 
-        with open("tasks.csv", "a", newline="") as tasks:
+        with open(p, "a", newline="") as tasks:
             fieldnames = ["Task Number", "Task Name", "Description", "Completed"]
             writer = csv.DictWriter(tasks, fieldnames=fieldnames)
             writer.writerow(
@@ -142,7 +142,7 @@ def add_task():
             )
 
     else:
-        with open("tasks.csv", "w", newline="") as tasks:
+        with open(p, "w", newline="") as tasks:
             fieldnames = ["Task Number", "Task Name", "Description", "Completed"]
             writer = csv.DictWriter(tasks, fieldnames=fieldnames)
             writer.writeheader()
@@ -161,7 +161,7 @@ def add_task():
 def complete_task():
     if p.exists():
         view_pending_tasks(show_menu=False)
-        with open("tasks.csv", "r", newline="") as csvfile:
+        with open(p, "r", newline="") as csvfile:
             reader = csv.DictReader(csvfile)
             rows = list(reader)
             pending_task_exists = False
@@ -180,7 +180,7 @@ def complete_task():
                             selected_task_found = True
 
                 if selected_task_found:
-                    with open("tasks.csv", "w", newline="") as csvfile:
+                    with open(p, "w", newline="") as csvfile:
                         fieldnames = [
                             "Task Number",
                             "Task Name",
