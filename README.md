@@ -5,7 +5,7 @@ A text-based task manager built with Python. This project represents my first im
 ## About
 This application allows users to manage daily tasks through a Command Line Interface (CLI). Unlike in-memory scripts, this program persists data to a local CSV file, ensuring tasks are saved even after the program closes.
 
-This project was built to master the fundamentals ofr Python control flow, file input/output, and state management.
+This project was built to master the fundamentals for Python control flow, file input/output, and state management.
 
 ## Features
 - **Persistent Storage:**
