@@ -3,11 +3,13 @@
 A text-based task manager built with Python. This project represents my first implementation of a persistent application using CSV file handling and procedural programming logic.
 
 ## About
+
 This application allows users to manage daily tasks through a Command Line Interface (CLI). Unlike in-memory scripts, this program persists data to a local CSV file, ensuring tasks are saved even after the program closes.
 
 This project was built to master the fundamentals for Python control flow, file input/output, and state management.
 
 ## Features
+
 - **Persistent Storage:**
   - Automatically creates and updates a tasks.csv file
 - **Task Management:**
@@ -21,6 +23,7 @@ This project was built to master the fundamentals for Python control flow, file 
   - Validates user input to prevent crashes
 
 ## Technical Highlights
+
 - **File I/O**
   - Implementation of the `csv` library
 - **Path Safety**
@@ -31,13 +34,17 @@ This project was built to master the fundamentals for Python control flow, file 
   - Logic ensures Task IDs are valid and states are tracked appropriately
 
 ## How to Run
+
 1. Ensure you have Python 3.x installed.
 2. Clone this repository.
 3. Run the script with `python main.py`.
 4. Follow the on-screen menu prompts.
 
 ### Future Roadmap
+
 This repo is archived as a first to-do list project. This will later be rebuilt with more advanced features such as:
-  - **Refactoring to OOP:** Rebuilding the logic to use classes such as `Task` and `TaskManager` classes.
-  - **Database Integration:** Moving from CSV to SQLite
-  - **New Features:** Deleting tasks, editing tasks, and due dates.
+
+- **Refactoring to OOP:** Rebuilding the logic to use classes such as `Task` and `TaskManager` classes.
+- **Database Integration:** Moving from CSV to SQLite.
+- **New Features:** Deleting tasks, editing tasks, and due dates.
+- **Integration with `Focus` Project:** Refactoring to be able to be used by another productivity-based project.
