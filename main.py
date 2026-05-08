@@ -27,7 +27,7 @@ def menu():
 
 def view_pending_tasks(show_menu=True):
     if not p.exists():
-        print("No tasks have been created yet.")
+        print("\n **No tasks have been created yet**\n")
     else:
         with open(p, newline="") as csvfile:
             reader = csv.reader(csvfile, delimiter=",")
@@ -56,7 +56,7 @@ def view_pending_tasks(show_menu=True):
 
             row_counter = 0
             for row in data_rows:
-                if row[3] == "False":
+                if row[4] == "False":  # Column: "Completed"
                     formatted_row = ""
                     for index, cell in enumerate(row):
                         formatted_row += cell.ljust(column_widths[index])
@@ -99,7 +99,7 @@ def view_completed_tasks(show_menu=True):
 
             row_counter = 0
             for row in data_rows:
-                if row[3] == "True":
+                if row[4] == "True":  # Column: "Completed"
                     formatted_row = ""
                     for index, cell in enumerate(row):
                         formatted_row += cell.ljust(column_widths[index])
@@ -120,6 +120,20 @@ def add_task():
 
     # Optional - null input should be accepted
     add_description = input("Add any relevant details about this task. ")
+
+    accepted_workbands = ["Now", "Next", "Later", "Blocked"]
+    accepted_workbands_lower = []
+    for wb in accepted_workbands:
+        accepted_workbands_lower.append(wb.lower())
+
+    raw_workband = input("Which workband status applies to this task? ")
+
+    while raw_workband.lower() not in accepted_workbands_lower:
+        raw_workband = input(f"Value must be in {accepted_workbands}: ")
+
+    for idx, workband in enumerate(accepted_workbands):
+        if raw_workband.lower() == workband.lower():
+            add_workband = accepted_workbands[idx]
     print("Task Added!")
 
     if p.exists():
@@ -130,20 +144,33 @@ def add_task():
                 counter += 1
 
         with open(p, "a", newline="") as tasks:
-            fieldnames = ["Task Number", "Task Name", "Description", "Completed"]
+            fieldnames = [
+                "Task Number",
+                "Task Name",
+                "Description",
+                "Workband",
+                "Completed",
+            ]
             writer = csv.DictWriter(tasks, fieldnames=fieldnames)
             writer.writerow(
                 {
                     "Task Number": counter,
                     "Task Name": add_name,
                     "Description": add_description,
+                    "Workband": add_workband,
                     "Completed": False,
                 }
             )
 
     else:
         with open(p, "w", newline="") as tasks:
-            fieldnames = ["Task Number", "Task Name", "Description", "Completed"]
+            fieldnames = [
+                "Task Number",
+                "Task Name",
+                "Description",
+                "Workband",
+                "Completed",
+            ]
             writer = csv.DictWriter(tasks, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerow(
@@ -151,6 +178,7 @@ def add_task():
                     "Task Number": "1",
                     "Task Name": add_name,
                     "Description": add_description,
+                    "Workband": add_workband,
                     "Completed": False,
                 }
             )
@@ -185,6 +213,7 @@ def complete_task():
                             "Task Number",
                             "Task Name",
                             "Description",
+                            "Workband",
                             "Completed",
                         ]
                         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
