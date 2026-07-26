@@ -23,10 +23,10 @@ def display_tasks(show_menu: bool = True, show_completed: bool = False) -> None:
             print(next_selection)
         return
 
-    column_widths = []
+    column_widths: list[int] = []
     for fieldname in manager.fieldnames:
-        header_len = len(fieldname)
-        data_max = 0
+        header_len: int = len(fieldname)
+        data_max: int = 0
         for task in tasks:
             if fieldname == "Task Number":
                 val = str(task.number)
@@ -41,13 +41,13 @@ def display_tasks(show_menu: bool = True, show_completed: bool = False) -> None:
             data_max = max(data_max, len(val))
         column_widths.append(max(header_len, data_max) + 2)
 
-    formatted_header = ""
+    formatted_header: str = ""
     for idx, fieldname in enumerate(manager.fieldnames):
         formatted_header += fieldname.ljust(column_widths[idx])
     print(formatted_header)
     print("-" * sum(column_widths))
 
-    row_counter = 0
+    row_counter: int = 0
     for task in tasks:
         if show_completed != task.completed:
             continue
@@ -116,8 +116,8 @@ def add_task_cli() -> None:
 
 
 def complete_task_cli() -> None:
-    tasks = manager.load_tasks()
-    pending = [t for t in tasks if not t.completed]
+    tasks: list[Task] = manager.load_tasks()
+    pending: list[Task] = [t for t in tasks if not t.completed]
 
     if not pending:
         print("Add a task first!")
@@ -125,7 +125,7 @@ def complete_task_cli() -> None:
         return
 
     display_tasks(show_completed=False, show_menu=False)
-    selection = input("Which task did you complete?\n")
+    selection: str = input("Which task did you complete?\n")
 
     for task in tasks:
         if str(task.number) == selection and not task.completed:
