@@ -62,7 +62,10 @@ def display_tasks(show_menu: bool = True, show_completed: bool = False) -> None:
         row_counter += 1
 
     if row_counter == 0:
-        print("No tasks are currently pending.")
+        if show_completed:
+            print("No tasks have been completed yet.")
+        else:
+            print("No tasks are currently pending.")
 
     if show_menu:
         print(next_selection)
@@ -105,7 +108,7 @@ def add_task_cli():
         number=manager.next_task_number(),
         name=name,
         description=description,
-        workband=Workband(add_workband.capitalize()),
+        workband=add_workband,
     )
     manager.add_task(task)
     print("Task Added!")
