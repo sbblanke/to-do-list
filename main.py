@@ -25,52 +25,7 @@ def menu():
     return selection
 
 
-def view_pending_tasks(show_menu=True):
-    if not p.exists():
-        print("\n **No tasks have been created yet**\n")
-    else:
-        with open(p, newline="") as csvfile:
-            reader = csv.reader(csvfile, delimiter=",")
-            rows = list(reader)
-
-            if not rows:
-                print("No tasks have been created yet.")
-                return
-
-            header_row = rows[0]
-            data_rows = rows[1:]
-            num_columns = len(header_row)
-            column_widths = []
-
-            for col in range(num_columns):
-                # Look at every cell in this column
-                # and find the one with the longest value
-                max_length = max(len(row[col]) for row in rows)
-                column_widths.append(max_length + 2)  # added 2 for spacing
-
-            formatted_header = ""
-            for index, cell in enumerate(header_row):
-                formatted_header += cell.ljust(column_widths[index])
-            print(formatted_header)
-            print("-" * sum(column_widths))
-
-            row_counter = 0
-            for row in data_rows:
-                if row[4] == "False":  # Column: "Completed"
-                    formatted_row = ""
-                    for index, cell in enumerate(row):
-                        formatted_row += cell.ljust(column_widths[index])
-                    print(formatted_row)
-                    row_counter += 1
-
-            if row_counter == 0:
-                print("No tasks are currently pending.")
-
-    if show_menu:
-        print(next_selection)
-
-
-def view_completed_tasks(show_menu=True):
+def display_tasks(show_menu: bool = True, show_completed: bool = False) -> None:
     if not p.exists():
         print("No tasks have been created yet.")
     else:
@@ -99,15 +54,17 @@ def view_completed_tasks(show_menu=True):
 
             row_counter = 0
             for row in data_rows:
-                if row[4] == "True":  # Column: "Completed"
-                    formatted_row = ""
-                    for index, cell in enumerate(row):
-                        formatted_row += cell.ljust(column_widths[index])
-                    print(formatted_row)
-                    row_counter += 1
+                is_completed = row[4] == "True"
+                if show_completed != is_completed:
+                    continue
+                formatted_row = ""
+                for index, cell in enumerate(row):
+                    formatted_row += cell.ljust(column_widths[index])
+                print(formatted_row)
+                row_counter += 1
 
             if row_counter == 0:
-                print("No tasks have been completed yet.")
+                print("No tasks are currently pending.")
 
     if show_menu:
         print(next_selection)
@@ -133,7 +90,7 @@ def add_task():
 
     for idx, workband in enumerate(accepted_workbands):
         if raw_workband.lower() == workband.lower():
-            add_workband = accepted_workbands[idx]
+            add_workband = workband
     print("Task Added!")
 
     if p.exists():
@@ -188,7 +145,7 @@ def add_task():
 
 def complete_task():
     if p.exists():
-        view_pending_tasks(show_menu=False)
+        display_tasks(show_completed=False, show_menu=False)
         with open(p, "r", newline="") as csvfile:
             reader = csv.DictReader(csvfile)
             rows = list(reader)
@@ -202,10 +159,9 @@ def complete_task():
             if pending_task_exists:
                 selection = input("Which task did you complete?\n")
                 for row in rows:
-                    if row["Task Number"] == selection:
-                        if row["Completed"] == "False":
-                            row["Completed"] = "True"
-                            selected_task_found = True
+                    if row["Task Number"] == selection and row["Completed"] == False:
+                        row["Completed"] = "True"
+                        selected_task_found = True
 
                 if selected_task_found:
                     with open(p, "w", newline="") as csvfile:
@@ -238,9 +194,9 @@ def main():
         if selection == "0":
             break
         elif selection == "1":
-            view_pending_tasks()
+            display_tasks(show_completed=False)
         elif selection == "2":
-            view_completed_tasks()
+            display_tasks(show_completed=True)
         elif selection == "3":
             add_task()
         elif selection == "4":
