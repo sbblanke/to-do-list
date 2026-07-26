@@ -15,7 +15,7 @@ def _format_row(row: list[str], widths: list[int]) -> str:
 
 
 def display_tasks(show_menu: bool = True, show_completed: bool = False) -> None:
-    tasks = manager._load_tasks()
+    tasks = manager.load_tasks()
 
     if not tasks:
         print("No tasks have been created yet.")
@@ -148,9 +148,9 @@ def main():
         elif selection == "2":
             display_tasks(show_completed=True)
         elif selection == "3":
-            manager.add_task()
+            add_task_cli()
         elif selection == "4":
-            manager.complete_task()
+            complete_task_cli()
         else:
             print("Please select a valid number.")
 

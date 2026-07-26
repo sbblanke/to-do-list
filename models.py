@@ -14,5 +14,5 @@ class Task:
     number: int
     name: str
     description: str
-    Workband: Workband
+    workband: Workband
     completed: bool = False
