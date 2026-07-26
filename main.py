@@ -14,10 +14,10 @@ def menu():
         "1. View all pending tasks\n"
         "2. View all completed tasks\n"
         "3. Add a task\n"
-        "4. Complete a task\n"
-        "0. Exit program\n"
+        "4. Complete a task\n\n"
+        "Q. Exit program\n"
         "\n"
-        "Enter your desired number: "
+        "Enter your selection: "
     )
     if not selection:
         return None
@@ -25,42 +25,43 @@ def menu():
     return selection
 
 
+def _format_row(row: list[str], widths: list[int]) -> str:
+    return "".join(cell.ljust(widths[i]) for i, cell in enumerate(row))
+
+
 def display_tasks(show_menu: bool = True, show_completed: bool = False) -> None:
+    no_tasks = "No tasks have been created yet."
     if not p.exists():
-        print("No tasks have been created yet.")
+        print(no_tasks)
     else:
         with open(p, newline="") as csvfile:
-            reader = csv.reader(csvfile, delimiter=",")
+            reader = csv.DictReader(csvfile)
             rows = list(reader)
 
             if not rows:
-                print("No tasks have been created yet.")
+                print(no_tasks)
                 return
 
-            header_row = rows[0]
-            data_rows = rows[1:]
-            num_columns = len(header_row)
             column_widths = []
-
-            for col in range(num_columns):
-                max_length = max(len(row[col]) for row in rows)
-                column_widths.append(max_length + 2)
+            for fieldname in reader.fieldnames:
+                header_len = len(fieldname)
+                max_length = max((len(row[fieldname]) for row in rows), default=0)
+                column_widths.append(max(header_len, max_length) + 2)
 
             formatted_header = ""
-            for index, cell in enumerate(header_row):
-                formatted_header += cell.ljust(column_widths[index])
+            for idx, fieldname in enumerate(reader.fieldnames):
+                formatted_header += fieldname.ljust(column_widths[idx])
             print(formatted_header)
             print("-" * sum(column_widths))
 
             row_counter = 0
-            for row in data_rows:
-                is_completed = row[4] == "True"
+            for row in rows:
+                is_completed = row["Completed"] == "True"
+
                 if show_completed != is_completed:
-                    continue
-                formatted_row = ""
-                for index, cell in enumerate(row):
-                    formatted_row += cell.ljust(column_widths[index])
-                print(formatted_row)
+                    continue  # skip rows that don't match intent from show_completed
+
+                print(_format_row(list(row.values()), column_widths))
                 row_counter += 1
 
             if row_counter == 0:
@@ -191,7 +192,7 @@ def main():
     print("What would you like to do first?")
     while True:
         selection = menu()
-        if selection == "0":
+        if selection == "Q" or selection == "q":
             break
         elif selection == "1":
             display_tasks(show_completed=False)
