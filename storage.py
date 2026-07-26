@@ -70,3 +70,12 @@ class TaskManager:
                 tasks[idx] = updated_task
                 break
         self._save_tasks(tasks)
+
+    def delete_task(self, task_number: int) -> bool:
+        tasks = self.load_tasks()
+        for idx, task in enumerate(tasks):
+            if task.number == task_number:
+                tasks.pop(idx)
+                self._save_tasks(tasks)
+                return True
+        return False
