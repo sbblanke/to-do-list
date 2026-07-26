@@ -169,7 +169,7 @@ def main() -> None:
         selection = menu()
         valid = ["1", "2", "3", "4", "d", "q"]
         if selection is None or selection.lower() not in valid:
-            print("please select a valid option.")
+            print("Please select a valid option.")
             continue
 
         selection = selection.lower()
