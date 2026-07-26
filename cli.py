@@ -71,7 +71,7 @@ def display_tasks(show_menu: bool = True, show_completed: bool = False) -> None:
         print(next_selection)
 
 
-def menu():
+def menu() -> str | None:
     selection = input(
         "\n"
         "1. View all pending tasks\n"
@@ -88,7 +88,7 @@ def menu():
     return selection
 
 
-def add_task_cli():
+def add_task_cli() -> None:
     name = input("What would you like to call this task? ")
     while not name:
         name = input("Please enter a name for this task: ")
@@ -115,7 +115,7 @@ def add_task_cli():
     print(next_selection)
 
 
-def complete_task_cli():
+def complete_task_cli() -> None:
     tasks = manager.load_tasks()
     pending = [t for t in tasks if not t.completed]
 
@@ -139,7 +139,7 @@ def complete_task_cli():
     print(next_selection)
 
 
-def main():
+def main() -> None:
     print("Welcome to your to-do list!\n")
     print("What would you like to do first?")
     while True:
