@@ -78,6 +78,7 @@ def menu() -> str | None:
         "2. View all completed tasks\n"
         "3. Add a task\n"
         "4. Complete a task\n\n"
+        "D. Delete a task\n"
         "Q. Exit program\n"
         "\n"
         "Enter your selection: "
@@ -115,6 +116,28 @@ def add_task_cli() -> None:
     print(next_selection)
 
 
+def delete_task_cli() -> None:
+    display_tasks(show_completed=False, show_menu=False)
+    raw = input("Which task do you want to delete? ")
+    if not raw:
+        print("Task not deleted.")
+        print(next_selection)
+        return
+
+    confirmed = input("Are you sure? (y/N) ")
+    if confirmed.lower() not in ("y", "yes"):
+        print("Task not deleted.")
+        print(next_selection)
+        return
+
+    if manager.delete_task(int(raw)):
+        print("Task deleted.")
+    else:
+        print("Task not found.")
+
+    print(next_selection)
+
+
 def complete_task_cli() -> None:
     tasks: list[Task] = manager.load_tasks()
     pending: list[Task] = [t for t in tasks if not t.completed]
@@ -144,7 +167,13 @@ def main() -> None:
     print("What would you like to do first?")
     while True:
         selection = menu()
-        if selection == "Q" or selection == "q":
+        valid = ["1", "2", "3", "4", "d", "q"]
+        if selection is None or selection.lower() not in valid:
+            print("please select a valid option.")
+            continue
+
+        selection = selection.lower()
+        if selection == "q":
             break
         elif selection == "1":
             display_tasks(show_completed=False)
@@ -154,8 +183,8 @@ def main() -> None:
             add_task_cli()
         elif selection == "4":
             complete_task_cli()
-        else:
-            print("Please select a valid number.")
+        elif selection == "d":
+            delete_task_cli()
 
     print("Be productive and come back soon!")
 
